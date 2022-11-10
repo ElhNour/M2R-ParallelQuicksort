@@ -1,0 +1,32 @@
+---
+title: "Quicksort performance analysis"
+author: "Ilya Meignan--Masson and Nour El hassane"
+date: "2022-11-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Running the experiment
+
+## Generate the arrays
+```{r}
+number_of_repetitions <- c(0:4)
+sizes <- c("100", "1000", "10000", "100000")
+```
+## Generate the combinations
+```{r}
+experiments <- crossing(number_of_repetitions, sizes)
+
+experiments
+```
+## Run the functions
+```{r}
+write.csv(experiments, "../data/experiments.csv", row.names=FALSE)
+```
+
+
+# Analysis of the results

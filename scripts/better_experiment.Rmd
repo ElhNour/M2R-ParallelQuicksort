@@ -8,6 +8,9 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+get_hostname <- function(){
+  return(gsub(" ", "", as.character(Sys.info()["nodename"])))
+}
 ```
 
 # Running the experiment
@@ -30,3 +33,7 @@ write.csv(experiments, "../data/experiments.csv", row.names=FALSE)
 
 
 # Analysis of the results
+
+```{r}
+data <- read.csv(file=paste("data/",paste(get_hostname(),"/measurements.txt", sep=""), sep=""))
+```

@@ -1,7 +1,7 @@
 
-OUTPUT_DIRECTORY=data/`hostname`_`date +%F`
+OUTPUT_DIRECTORY=data/`hostname`
 mkdir -p $OUTPUT_DIRECTORY
-OUTPUT_FILE=$OUTPUT_DIRECTORY/measurements_`date +%R`.txt
+OUTPUT_FILE=$OUTPUT_DIRECTORY/measurements.txt
 
 touch $OUTPUT_FILE
 expe_file="data/experiments.csv"

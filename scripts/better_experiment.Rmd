@@ -12,28 +12,33 @@ get_hostname <- function(){
   return(gsub(" ", "", as.character(Sys.info()["nodename"])))
 }
 ```
+# Problem statement
+Improve the experimental design and the performance evaluation of a simple parallel quicksort implementation. This would be done by taking into accout the replication and randomization concepts, so that we have reliable unbiaised evaluations.
 
-# Running the experiment
+# Experimental design
 
-## Generate the arrays
+## Generate the arrays of parameters (number of execution repetitions and different array sizes)
 ```{r}
-number_of_repetitions <- c(0:4)
-sizes <- c("100", "1000", "10000", "100000")
+#replication
+number_of_repetitions <- c(0:10) 
+sizes <- c("100","500", "1000","5000", "10000","50000", "100000")
 ```
 ## Generate the combinations
 ```{r}
+#randomization
 experiments <- crossing(number_of_repetitions, sizes)
-
+experiments <- experiments[sample(1:nrow(experiments)), ]
 experiments
 ```
 ## Run the functions
 ```{r}
-write.csv(experiments, "../data/experiments.csv", row.names=FALSE)
+# store the experiments parameters in a csv file
+write.csv(experiments, "../data/nour_2022-11-23/experiments.csv", row.names=FALSE)
 ```
 
 
 # Analysis of the results
 
 ```{r}
-data <- read.csv(file=paste("data/",paste(get_hostname(),"/measurements.txt", sep=""), sep=""))
+data <- read.csv(file=paste("data/nour_2022-11-23",paste(get_hostname(),"/measurements.txt", sep=""), sep=""))
 ```

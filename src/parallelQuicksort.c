@@ -58,10 +58,18 @@ int main(int argc, char *argv[])
   srand(time(NULL));            //seed random
 
   int NUM = DNUM;
+  int FUNC = DNUM;
   if (argc == 2)                //user specified list size.
   {
     NUM = atoi(argv[1]);
+    FUNC = atoi(argv[2]);
   }
+  else if (argc == 3)
+  {
+    NUM = atoi(argv[1]);
+    FUNC = atoi(argv[2]);
+  }
+  
   //Want to compare sorting on the same list,
   //so backup.
   double *lystbck = (double *) malloc(NUM * sizeof(double));
@@ -75,8 +83,8 @@ int main(int argc, char *argv[])
   //copy list.
   memcpy(lyst, lystbck, NUM * sizeof(double));
 
-
   //Sequential mergesort, and timing.
+if (FUNC==0){
   gettimeofday(&start, NULL);
   quicksort(lyst, NUM);
   gettimeofday(&end, NULL);
@@ -88,13 +96,13 @@ int main(int argc, char *argv[])
   diff = ((end.tv_sec * 1000000 + end.tv_usec)
           - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
   printf("Sequential quicksort took: %lf sec.\n", diff);
-
+}
 
 
   //Now, parallel quicksort.
-
+if (FUNC==1){
   //copy list.
-  memcpy(lyst, lystbck, NUM * sizeof(double));
+  //memcpy(lyst, lystbck, NUM * sizeof(double)); since we execute one function at a time, we don't need to re-copy the array list
 
   gettimeofday(&start, NULL);
   parallelQuicksort(lyst, NUM, THREAD_LEVEL);
@@ -107,10 +115,11 @@ int main(int argc, char *argv[])
   diff = ((end.tv_sec * 1000000 + end.tv_usec)
           - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
   printf("Parallel quicksort took: %lf sec.\n", diff);
-
+}
 
 
   //Finally, built-in for reference:
+if (FUNC==2){
   memcpy(lyst, lystbck, NUM * sizeof(double));
   gettimeofday(&start, NULL);
   qsort(lyst, NUM, sizeof(double), compare_doubles);
@@ -123,7 +132,7 @@ int main(int argc, char *argv[])
   diff = ((end.tv_sec * 1000000 + end.tv_usec)
           - (start.tv_sec * 1000000 + start.tv_usec)) / 1000000.0;
   printf("Built-in quicksort took: %lf sec.\n", diff);
-
+}
   free(lyst);
   free(lystbck);
   pthread_exit(NULL);

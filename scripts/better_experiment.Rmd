@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(dplyr)
+library(ggplot2)
 get_hostname <- function(){
   return(gsub(" ", "", as.character(Sys.info()["nodename"])))
 }
@@ -45,14 +47,46 @@ data <- read.csv(file=paste("data/nour_2022-11-23",paste(get_hostname(),"/measur
 
 ```{r}
 df <- read.csv(file="../data/nour_2022-11-23/measurements_2.csv", sep=",",header = FALSE)
-names(df) <- c('Size','Function','Execution time')
+names(df) <- c('Size','Function','Execution_time')
 df
 ```
 Calculate the execution time mean (sample mean) for each function
 ```{r}
-library(dplyr)
-sample_means <- df %>% group_by(Function) %>% summarise(Sn=mean(`Execution time`))
+sample_means <- df %>% group_by(Function) %>% summarise(Sn=mean(`Execution_time`))
 sample_means
 ```
 Wow!! It seems that the parallel quicksort is the worst algorithm!
-Let's confirm that using the Confidence Interval.
+Let's use the boxplot and confirm that using the Confidence Interval.
+```{r}
+ggplot(data=df,aes(x=Function,y=Execution_time, group=factor(Function)))+ geom_boxplot() + theme_bw()
+```
+```{r}
+df$Diff1_2=df_1-df_2 
+dfgg = df[c("Function","Execution_time","Diff1_2")] %>% gather(Function, Execution_time)
+dfsum = dfgg %>% group_by(Function) %>% summarise(num = n(), mean = mean(Execution_time), sd = sd(Execution_time), se = 2*sd/sqrt(num))
+ggplot(dfgg,aes(x=Function,y=Execution_time,color=Function))  + theme_bw() +
+geom_jitter(alpha=.2,position = position_jitter(width = .1)) +
+geom_errorbar(data=dfsum,width=.2,
+aes(y=mean,ymin=mean-se,ymax=mean+se)) +
+geom_point(data=dfsum,shape=21, size=3,aes(y=mean,color=Function))
+```
+
+```{r}
+min_1 <-min(df$Execution_time[df$Function==1])
+max_0 <- max(df$Execution_time[df$Function==0])
+max_2 <- max(df$Execution_time[df$Function==2])
+print(paste(min_1,max_0,max_2))
+```
+Min execution time of the parallel quicksort is less than max sequential and max built-in. Thus, intervals overlap!
+Compare Var(1-0) to Var(1) and Var(0), and repeat the same for Var(1-2) to Var(1) and Var(2).
+```{r}
+df_0<-df$Execution_time[df$Function==0]
+df_1<-df$Execution_time[df$Function==1]
+df_2<-df$Execution_time[df$Function==2]
+print(paste(var(df_1-df_0),var(df_1),var(df_0)))
+```
+Var(1-0) is smaller than Var(1) and Var(0), so we can conclude that \mu_0 < \mu_1 with 95% of confidence.
+```{r}
+print(paste(var(df_1-df_2),var(df_1),var(df_2)))
+```
+Var(1-2) is smaller than Var(1) but bigger than Var(2), so we need to consider the variable "1-2".

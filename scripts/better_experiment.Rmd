@@ -60,16 +60,6 @@ Let's use the boxplot and confirm that using the Confidence Interval.
 ```{r}
 ggplot(data=df,aes(x=Function,y=Execution_time, group=factor(Function)))+ geom_boxplot() + theme_bw()
 ```
-```{r}
-df$Diff1_2=df_1-df_2 
-dfgg = df[c("Function","Execution_time","Diff1_2")] %>% gather(Function, Execution_time)
-dfsum = dfgg %>% group_by(Function) %>% summarise(num = n(), mean = mean(Execution_time), sd = sd(Execution_time), se = 2*sd/sqrt(num))
-ggplot(dfgg,aes(x=Function,y=Execution_time,color=Function))  + theme_bw() +
-geom_jitter(alpha=.2,position = position_jitter(width = .1)) +
-geom_errorbar(data=dfsum,width=.2,
-aes(y=mean,ymin=mean-se,ymax=mean+se)) +
-geom_point(data=dfsum,shape=21, size=3,aes(y=mean,color=Function))
-```
 
 ```{r}
 min_1 <-min(df$Execution_time[df$Function==1])
@@ -90,3 +80,14 @@ Var(1-0) is smaller than Var(1) and Var(0), so we can conclude that \mu_0 < \mu_
 print(paste(var(df_1-df_2),var(df_1),var(df_2)))
 ```
 Var(1-2) is smaller than Var(1) but bigger than Var(2), so we need to consider the variable "1-2".
+```{r}
+df$Diff1_2=df_1-df_2 
+dfgg = df[c("Function","Execution_time","Diff1_2")] %>% gather(Function, Execution_time)
+dfsum = dfgg %>% group_by(Function) %>% summarise(num = n(), mean = mean(Execution_time), sd = sd(Execution_time), se = 2*sd/sqrt(num))
+ggplot(dfgg,aes(x=Function,y=Execution_time,color=Function))  + theme_bw() +
+geom_jitter(alpha=.2,position = position_jitter(width = .1)) +
+geom_errorbar(data=dfsum,width=.2,
+aes(y=mean,ymin=mean-se,ymax=mean+se)) +
+geom_point(data=dfsum,shape=21, size=3,aes(y=mean,color=Function))
+```
+E(1-2)>0 => E(1)>E(2) with 95% of confidence. Hence, we can say that the Built-in quicksort function is better than the parallel quicksort function.

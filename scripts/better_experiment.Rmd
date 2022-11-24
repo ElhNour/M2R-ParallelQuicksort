@@ -42,3 +42,17 @@ write.csv(experiments, "../data/nour_2022-11-23/experiments.csv", row.names=FALS
 ```{r}
 data <- read.csv(file=paste("data/nour_2022-11-23",paste(get_hostname(),"/measurements.txt", sep=""), sep=""))
 ```
+
+```{r}
+df <- read.csv(file="../data/nour_2022-11-23/measurements_2.csv", sep=",",header = FALSE)
+names(df) <- c('Size','Function','Execution time')
+df
+```
+Calculate the execution time mean (sample mean) for each function
+```{r}
+library(dplyr)
+sample_means <- df %>% group_by(Function) %>% summarise(Sn=mean(`Execution time`))
+sample_means
+```
+Wow!! It seems that the parallel quicksort is the worst algorithm!
+Let's confirm that using the Confidence Interval.

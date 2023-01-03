@@ -1,11 +1,11 @@
 ## Better experimental design
-### /computational-documents: 
+### /computational-documents
 contains computational documents (html) of different experiments already performed.
-### /data:
+### /data
 contains experiment confirgurations (csv files), and output files for the measurements.
-### /scripts:
+### /scripts
 contains different scripts and R markdowns for experimental design, experiment running engine, and data analysis.
-### /src:
+### /src
 contains the source code for quicksort functions implemented in C.
 
 M2R-ParallelQuicksort

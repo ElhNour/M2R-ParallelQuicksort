@@ -42,13 +42,9 @@ write.csv(experiments, "../data/nour_2022-11-23/experiments.csv", row.names=FALS
 # Analysis of the results
 
 ```{r}
-data <- read.csv(file=paste("data/nour_2022-11-23",paste(get_hostname(),"/measurements.txt", sep=""), sep=""))
-```
-
-```{r}
 df <- read.csv(file="../data/nour_2022-11-23/measurements_2.csv", sep=",",header = FALSE)
 names(df) <- c('Size','Function','Execution_time')
-df
+summary(df)
 ```
 Calculate the execution time mean (sample mean) for each function
 ```{r}
@@ -90,4 +86,5 @@ geom_errorbar(data=dfsum,width=.2,
 aes(y=mean,ymin=mean-se,ymax=mean+se)) +
 geom_point(data=dfsum,shape=21, size=3,aes(y=mean,color=Function))
 ```
-E(1-2)>0 => E(1)>E(2) with 95% of confidence. Hence, we can say that the Built-in quicksort function is better than the parallel quicksort function.
+
+We can see from the boxplot that E[1-2]>0 => E[1] > E[2]. We can deduce then, that C quicksort is better than the parallel quicksort.

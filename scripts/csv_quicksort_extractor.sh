@@ -1,5 +1,5 @@
-file="data/nour_2022-11-23/measurements_2.txt"
-OUTPUT_FILE=data/nour_2022-11-23/measurements_2.csv
+file="data/nour_2023-01-03/measurements.txt"
+OUTPUT_FILE=data/nour_2023-01-03/measurements.csv
 touch $OUTPUT_FILE
 
 while IFS=' ' read -r fst scnd thrd frth ffth 
